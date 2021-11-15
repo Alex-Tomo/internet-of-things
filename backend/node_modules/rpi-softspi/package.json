@@ -1,0 +1,41 @@
+{
+   "name": "rpi-softspi",
+   "description": "Software SPI implementation to use any Raspberry Pi pins as a SPI interface",
+   "version": "1.0.5",
+   "keywords": [
+      "spi",
+      "raspberry",
+      "raspberrypi",
+      "raspberry pi",
+      "rpi",
+      "gpio"
+   ],
+   "author": "Armin Junge",
+   "license": "MIT",
+   "repository": "git://github.com/Vertumnus/js-rpi-softspi.git",
+   "bugs": {
+      "url": "https://github.com/Vertumnus/js-rpi-softspi/issues"
+   },
+   "contributors": [],
+   "directories": {
+      "lib": "./lib",
+      "doc": "./doc"
+   },
+   "dependencies": {
+      "rpio": "*"
+   },
+   "devDependencies": {
+      "grunt": "^1.0.1",
+      "grunt-contrib-jshint": "^1.1.0",
+      "grunt-contrib-uglify": "github:gruntjs/grunt-contrib-uglify#harmony",
+      "grunt-jsdoc": "^2.1.0",
+      "grunt-npm-command": "^0.1.2",
+      "grunt-coveralls": "^1.0.1",
+      "mock-require": "^2.0.2",
+      "uglify-es": "github:mishoo/UglifyJS2#harmony"
+   },
+   "scripts": {
+      "test": "mocha",
+      "coverage": "nyc --reporter=lcov mocha"
+   }
+}
