@@ -4,9 +4,49 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <title>Pig-E-Bank API</title>
 </head>
 <body>
-    <h1>Hi there</h1>
+    <div class="container">
+        <div class="m_head">
+            <h1 class="m_title">Pig-E-Bank API</h1>
+            <h2 class="s_title">Documentation</h2>
+            <div class="line_sep"></div>
+        </div>
+        <div class="w_spacel"></div>
+        <div class="w_spacer"></div>
+        <div class="m_cont">
+            <h2 class="cont_head">API Endpoints</h2>
+            <div class="line_sep_cont"></div>
+            <div class="cont_box">
+                <ul>
+                    <li class="list_head">Endpoint Name: <a>/wallets</a></li>
+                    <li class="list_head">type: <a>GET</a></li>
+                    <li class="list_head">Link: <a href="/wallets">Click here</a></li>
+                    <li class="list_head">Description: 
+                        <a class="list_desc">/wallets is an endpoint to show all instantiated wallets, this is parsed in JSON. See example below.</a></li>
+                        <li class="list_head"><center><img src="images/codeex1.png"></center></li>
+                </ul>
+
+            </div>
+<section id="api_2">
+            <div class="cont_box">
+                <ul>
+                    <li class="list_head">Endpoint Name: <a>/settings</a></li>
+                    <li class="list_head">type: <a>POST</a></li>
+                    <li class="list_head">Description: 
+                        <a class="list_desc">/settings is a way of communicating with the backend hardware, by passing in JSON variables as parameters.
+                            The api gets this information spesifically from the body of the http request and therefore you cannot pass in variables by "?"
+                            method within the url. An example of how to do this using axios is below:
+                        </a></li>
+                        <li class="list_head"><center><img src="images/codeex.png"></center></li>
+                </ul>
+            </div>
+
+</section>     
+        </div>
+
+      </div>
 </body>
 </html>

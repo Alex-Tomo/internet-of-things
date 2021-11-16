@@ -1,81 +1,54 @@
-<<<<<<< HEAD
-//const {checkCard} = require('./read');
-=======
-const {checkCard, sleep} = require('./read');
->>>>>>> refs/remotes/origin/main
-const wallet = require('./digital-wallet');
-const express = require('express');
-const cors = require('cors');
+const { checkCard } = require('./read')
+const Wallet = require('./digital-wallet')
+const express = require('express')
+const cors = require('cors')
 
-const app = express();
-const port = 8080;
+// Create and instance of express and capture port number.
+const app = express()
+const port = 8080
 
+// for testing purposes we will have a wallet creation page at login
+const walletOne = new Wallet('10215645321', 'Person 1', 50, 1, 2, 200, 500)
+const walletList = [walletOne]
 
-app.use(express.json());
-app.use(cors());
+app.use('/', express.static('./src'))
+app.use(express.json())
+app.use(cors())
 
-//for testing purposes we will have a wallet creation page at login
-const walletOne = new wallet('10215645321', 'Jordan Short', 50, 1, 2, 200, 500);
-const walletTwo = new wallet('34563456345', 'Bill Clinton', 50, 1, 2, 200, 500);
-
-
-<<<<<<< HEAD
-/*setInterval(() => {
-    flag = checkCard();
-=======
 setInterval(() => {
-    flag = checkCard(walletList[0].colour);
->>>>>>> refs/remotes/origin/main
-    if(flag) {
-        walletOne.addBalance();
-        console.log(`New balance is: ${walletOne.balance}`);
-        sleep(5000);
-    }
-}, 500);*/
+  flag = checkCard()
+  if (flag) {
+    walletOne.addBalance()
+    console.log(`New balance is: ${walletOne.balance}`)
+    sleep(5000)
+  }
+}, 500)
 
-//Wallets will be stored in this wallet list dynamically.
-var walletList = [walletOne, walletTwo];
+// Prints list of all instantiated wallets
+app.get('/wallets', (req, res) => { res.json({ walletList }) })
 
-//Main route, prints list of all instantiated wallets
-app.get('/', (req, res) => {res.json({walletList})})
-
-//Postman Test to ensure that the we are able to add a balance and a transaction to the transaction history.
-app.post('/test', (req, res) => {
-    walletOne.addBalance();
-    res.end();
-})
-
-/*Settings endpoint, this needs to be passed in all values via JSON like so:
-    {
-        walletID: int e.g 10215645321, 
-        walletName: String, 
-        depositAmount: int, 
-        colour: int,
-        sound: int,
-        depositLimit: int
-    }
-*/
 app.post('/settings', (req, res) => {
-    var settingData = [req.body.walletID,req.body.walletName,req.body.depositAmount,req.body.colour,req.body.sound,req.body.depositLimit];
-//Loop to find the correct wallet and ammend the settings. This will be changed to be tidier.
-error = true;
-    for(i = 0; i < walletList.length; ++i){
-        if(settingData[0] == walletList[i].id){
-            console.log(`found wallet ${walletList[i].name}`);
-            walletList[i].name = settingData[1];
-            walletList[i].depositAmount = settingData[2];
-            walletList[i].colour = settingData[3];
-            walletList[i].noise = settingData[4];
-            walletList[i].depositLimit = settingData[5];
-            error = false;
-            res.end("Settings Updated")
-        }
+// Parses the post request body elements and places into an array "settingData"
+  const settingData = [req.body.walletID, req.body.walletName, req.body.depositAmount, req.body.colour, req.body.sound, req.body.depositLimit]
+  let error = true
+
+  // Loops over walletList (assigned wallets) in order to find the requested wallet and assign the settings profile
+  for (let i = 0; i < walletList.length; ++i) {
+    if (settingData[0] === parseInt(walletList[i].id, 10)) {
+      console.log(`wallet id: ${walletList[i].id} updated.`)
+      // Assigning wallet attributes to the settings recieved by the post request.
+      walletList[i].name = settingData[1]
+      walletList[i].depositAmount = settingData[2]
+      walletList[i].colour = settingData[3]
+      walletList[i].noise = settingData[4]
+      walletList[i].depositLimit = settingData[5]
+      error = false
+      res.end('Settings Updated')
     }
-    if(error != false){
-    res.end("Whoops!, You must have entered the incorrect WalletID");
-    }
+  }
+  // Error checking to ensure the endpoint produces an output.
+  if (error !== false) res.end('Whoops!, You must have entered the incorrect WalletID')
 })
 
-app.listen(port, () => {
-    console.log(`server started on port: ${port}`);
-})
+// Listens for http traffic from ${port}
+app.listen(port, () => { console.log(`server started on port: ${port}`) })
