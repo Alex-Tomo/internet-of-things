@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.js"></script>
+</head>
+<body>
+    <h1>Test to Backend</h1>
+    <p id="balance">Not Available</p>
+    <span id="depositAmountSpan">Amount to deposit:</span>
+    <input name="depositAmount" id="depositAmount" type="range" min="0" max="50">
+    <br><br>
+    <label for="depositLimit">Monthly Deposit Limit</label>
+    <input id="depositLimit" name="depositLimit" type="number" min="0">
+    <br><br>
+    <label for="colours">Pig Colour</label>
+    <select name="colours" id="colours">
+        <option value="0">Light Blue</option>
+        <option value="1">Purple</option>
+        <option value="2">Yellow</option>
+        <option value="3">Dark Blue</option>
+        <option value="4">Green</option>
+        <option value="5">Red</option>
+        <option value="6">White</option>
+        <option value="7">Off</option>
+    </select>
+    <br><br>
+    <label for="noises">Pig Noise</label>
+    <select name="noises" id="noises">
+        <option value="0">Oink!</option>
+        <option value="1">Poop!</option>
+        <option value="2">Laugh!</option>
+    </select>
+    <br><br>
+    <button id="updateButton">Update!</button>
+    <br><br>
+    <button id="depositButton">Deposit Now!</button>
+    <script src="./functions.js"></script>
+</body>
+</html>

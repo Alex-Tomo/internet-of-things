@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 //const {checkCard} = require('./read');
+=======
+const {checkCard, sleep} = require('./read');
+>>>>>>> refs/remotes/origin/main
 const wallet = require('./digital-wallet');
 const express = require('express');
 const cors = require('cors');
@@ -15,11 +19,17 @@ const walletOne = new wallet('10215645321', 'Jordan Short', 50, 1, 2, 200, 500);
 const walletTwo = new wallet('34563456345', 'Bill Clinton', 50, 1, 2, 200, 500);
 
 
+<<<<<<< HEAD
 /*setInterval(() => {
     flag = checkCard();
+=======
+setInterval(() => {
+    flag = checkCard(walletList[0].colour);
+>>>>>>> refs/remotes/origin/main
     if(flag) {
         walletOne.addBalance();
         console.log(`New balance is: ${walletOne.balance}`);
+        sleep(5000);
     }
 }, 500);*/
 
