@@ -1,4 +1,4 @@
-const {checkCard} = require('./read');
+const {checkCard, sleep} = require('./read');
 const wallet = require('./digital-wallet');
 const express = require('express');
 const cors = require('cors');
@@ -16,10 +16,11 @@ const walletTwo = new wallet('34563456345', 'Bill Clinton', 50, 1, 2, 200, 500);
 
 
 setInterval(() => {
-    flag = checkCard();
+    flag = checkCard(walletList[0].colour);
     if(flag) {
         walletOne.addBalance();
         console.log(`New balance is: ${walletOne.balance}`);
+        sleep(5000);
     }
 }, 500);
 
