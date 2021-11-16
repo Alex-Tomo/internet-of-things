@@ -1,5 +1,19 @@
-Put notes in here
-You mean notes like this?
-Going forward, use descriptive notes. 
-Use describing words. For example:
-  I am HAVING a poo.
+Colour options:    (R, G, B)
+  0 -> light blue  (1, 0, 0)
+  1 -> purple      (0, 1, 0)
+  2 -> yellow      (0, 0, 1)
+  3 -> dark blue   (1, 1, 0)
+  4 -> green       (1, 0, 1)
+  5 -> red         (0, 1, 1)
+  6 -> white       (0, 0, 0)
+  7 -> black (off) (1, 1, 1)
+
+Sound options:
+  0 -> Oink pig
+  1 -> Wree pig
+  2 -> Fart 1
+  3 -> Fart 2
+  4 -> Coin Drop 1
+  5 -> Coin Drop 2
+  6 -> Laugh 1
+  7 -> Laugh 2
