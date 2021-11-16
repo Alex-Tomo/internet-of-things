@@ -1,4 +1,4 @@
-const {checkCard} = require('./read');
+//const {checkCard} = require('./read');
 const wallet = require('./digital-wallet');
 const express = require('express');
 const cors = require('cors');
@@ -15,13 +15,13 @@ const walletOne = new wallet('10215645321', 'Jordan Short', 50, 1, 2, 200, 500);
 const walletTwo = new wallet('34563456345', 'Bill Clinton', 50, 1, 2, 200, 500);
 
 
-setInterval(() => {
+/*setInterval(() => {
     flag = checkCard();
     if(flag) {
         walletOne.addBalance();
         console.log(`New balance is: ${walletOne.balance}`);
     }
-}, 500);
+}, 500);*/
 
 //Wallets will be stored in this wallet list dynamically.
 var walletList = [walletOne, walletTwo];
@@ -48,6 +48,7 @@ app.post('/test', (req, res) => {
 app.post('/settings', (req, res) => {
     var settingData = [req.body.walletID,req.body.walletName,req.body.depositAmount,req.body.colour,req.body.sound,req.body.depositLimit];
 //Loop to find the correct wallet and ammend the settings. This will be changed to be tidier.
+error = true;
     for(i = 0; i < walletList.length; ++i){
         if(settingData[0] == walletList[i].id){
             console.log(`found wallet ${walletList[i].name}`);
@@ -56,8 +57,12 @@ app.post('/settings', (req, res) => {
             walletList[i].colour = settingData[3];
             walletList[i].noise = settingData[4];
             walletList[i].depositLimit = settingData[5];
+            error = false;
             res.end("Settings Updated")
         }
+    }
+    if(error != false){
+    res.end("Whoops!, You must have entered the incorrect WalletID");
     }
 })
 
