@@ -33,272 +33,7 @@ const checkCard = (colour) => {
         // console.log(response);
         // console.log("Card Detected: " + rfid.getDataForBlock);
 
-        switch (colour) {
-            case 0: // light blue
-                LEDR.writeSync(1);
-                LEDG.writeSync(0);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(0);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(0);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                break; 
-
-            case 1: // purple
-                LEDR.writeSync(0);
-                LEDG.writeSync(1);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(0);
-                LEDG.writeSync(1);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(0);
-                LEDG.writeSync(1);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                break; 
-
-            case 2: // yellow
-                LEDR.writeSync(0);
-                LEDG.writeSync(0);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(0);
-                LEDG.writeSync(0);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-                
-                LEDR.writeSync(0);
-                LEDG.writeSync(0);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-                
-                break; 
-
-            case 3: // dark blue
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                break; 
-
-            case 4: // green
-                LEDR.writeSync(1);
-                LEDG.writeSync(0);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-                
-                LEDR.writeSync(1);
-                LEDG.writeSync(0);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(0);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                break; 
-
-            case 5: // red
-                LEDR.writeSync(0);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-                
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(0);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-                
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(0);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-                
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                break; 
-
-            case 6: // white
-                LEDR.writeSync(0);
-                LEDG.writeSync(0);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(0);
-                LEDG.writeSync(0);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                sleep(250); 
-
-                LEDR.writeSync(0);
-                LEDG.writeSync(0);
-                LEDB.writeSync(0);
-
-                sleep(250); 
-
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-
-                break; 
-
-            case 7: // off
-                LEDR.writeSync(1);
-                LEDG.writeSync(1);
-                LEDB.writeSync(1);
-                break; 
-        }
+        flashLED(getLEDColour(colour));
 
         flag = true;
     }
@@ -310,19 +45,52 @@ const checkCard = (colour) => {
     }
 
     rfid.stopCrypto();
-    return flag;          
+    return flag;
 }
 
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
+const sleep = (milliseconds) => {
+    let start = new Date().getTime();
+    for (let i = 0; i < 1e7; i++) {
         if ((new Date().getTime() - start) > milliseconds){
             break;
-        }    
+        }
+    }
+}
+
+const getLEDColour = (colour) => {
+    let LED = {};
+    switch (colour) {
+        case 0: LED = {'r' : 1, 'g' : 0, 'b' : 0}; break;
+        case 1: LED = {'r' : 0, 'g' : 1, 'b' : 0}; break;
+        case 2: LED = {'r' : 0, 'g' : 0, 'b' : 1}; break;
+        case 3: LED = {'r' : 1, 'g' : 1, 'b' : 0}; break;
+        case 4: LED = {'r' : 1, 'g' : 0, 'b' : 1}; break;
+        case 5: LED = {'r' : 0, 'g' : 1, 'b' : 1}; break;
+        case 6: LED = {'r' : 0, 'g' : 0, 'b' : 0}; break;
+        default: LED = {'r' : 1, 'g' : 1, 'b' : 1}; break;
+    }
+    return LED;
+}
+
+const flashLED = (colour) => {
+    for(let i = 0; i < 3; i++) {
+        LEDR.writeSync(colour.r);
+        LEDG.writeSync(colour.g);
+        LEDB.writeSync(colour.b);
+
+        sleep(250);
+
+        LEDR.writeSync(1);
+        LEDG.writeSync(1);
+        LEDB.writeSync(1);
+
+        sleep(250);
     }
 }
 
 module.exports = {
     checkCard: checkCard,
-    sleep: sleep
+    sleep: sleep,
+    getLEDColour: getLEDColour,
+    flashLED: flashLED
 }

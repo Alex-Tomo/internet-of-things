@@ -1,4 +1,4 @@
-const { checkCard } = require('./read')
+const {checkCard, sleep, getLEDColour, flashLED} = require('./read');
 const Wallet = require('./digital-wallet')
 const express = require('express')
 const cors = require('cors')
@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(cors())
 
 setInterval(() => {
-  flag = checkCard()
+  flag = checkCard(walletList[0].colour);
   if (flag) {
     walletOne.addBalance()
     console.log(`New balance is: ${walletOne.balance}`)
@@ -48,6 +48,14 @@ app.post('/settings', (req, res) => {
   }
   // Error checking to ensure the endpoint produces an output.
   if (error !== false) res.end('Whoops!, You must have entered the incorrect WalletID')
+})
+
+app.post('/deposit', (req, res) => {
+  flashLED(getLEDColour(walletOne.colour));
+  checkCard(walletOne.colour, true);
+  walletOne.addBalance();
+  console.log(`New balance is: ${walletOne.balance}`);
+  sleep(5000);
 })
 
 // Listens for http traffic from ${port}
