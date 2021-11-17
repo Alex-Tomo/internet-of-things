@@ -1,3 +1,9 @@
+Testing suite if anyone wants to use to test out front-end api connections:
+~ Navigate to /testing-suite
+~ node test.js
+~ Navigate to http://localhost:3000 in browser
+~ Will setup a shell script later, however launch the backend api at the same time and it should all connect.
+
 Colour options:    (R, G, B)
   0 -> light blue  (1, 0, 0)
   1 -> purple      (0, 1, 0)
