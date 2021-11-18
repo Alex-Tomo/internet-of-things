@@ -1,9 +1,9 @@
-// const {
-//   checkCard,
-//   sleep,
-//   getLEDColour,
-//   flashLED
-// } = require('./read');
+const {
+  checkCard,
+  sleep,
+  getLEDColour,
+  flashLED
+} = require('./read');
 const Wallet = require('./digital-wallet')
 const express = require('express')
 const cors = require('cors')
@@ -20,14 +20,14 @@ app.use('/', express.static('./src'))
 app.use(express.json())
 app.use(cors())
 
-// setInterval(() => {
-//   flag = checkCard(walletList[0].colour);
-//   if (flag) {
-//       walletOne.addBalance()
-//       console.log(`New balance is: ${walletOne.balance}`)
-//       sleep(5000)
-//   }
-// }, 500)
+setInterval(() => {
+  flag = checkCard(walletList[0].colour);
+  if (flag) {
+      walletOne.addBalance()
+      console.log(`New balance is: ${walletOne.balance}`)
+      sleep(5000)
+  }
+}, 500)
 
 // Prints list of all instantiated wallets
 app.get('/wallets', (req, res) => {
@@ -65,6 +65,7 @@ app.post('/deposit', (req, res) => {
   walletOne.addBalance();
   console.log(`New balance is: ${walletOne.balance}`);
   sleep(5000);
+  res.end();
 })
 
 // Listens for http traffic from ${port}
