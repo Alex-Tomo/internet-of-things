@@ -1,0 +1,16 @@
+body {
+    background-color: #14171D;
+    color: #FF91B0;
+}
+
+.App {
+    text-align: center;
+}
+
+li {
+    list-style: none;
+}
+
+.links {
+    color: #EDD3D8;
+}
