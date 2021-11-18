@@ -16,6 +16,11 @@ class Wallet {
       this.balance += this.depositAmount
       this.addTransaction()
     }
+
+    addSpecificBalance (amount) {
+      this.balance += amount
+      this.addTransaction()
+    }
   
     // Add transaction to transaction history
     addTransaction () {

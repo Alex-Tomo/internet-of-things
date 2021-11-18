@@ -1,32 +1,44 @@
-const {
-  checkCard,
-  sleep,
-  getLEDColour,
-  flashLED
-} = require('./read');
 const Wallet = require('./digital-wallet')
 const express = require('express')
 const cors = require('cors')
+
+const RFID = require('./rfid');
+let rfid = new RFID();
+
+const LED = require('./led');
+const led = new LED();
+
+const SPEAKER = require('./speaker');
+const speaker = new SPEAKER();
+
+const LCD = require('./lcd');
+const lcd = new LCD();
 
 // Create and instance of express and capture port number.
 const app = express()
 const port = 8080
 
 // for testing purposes we will have a wallet creation page at login
-const walletOne = new Wallet('10215645321', 'Person 1', 50, 1, 2, 200, 500)
+const walletOne = new Wallet('10215645321', 'Person 1', 50, 1, 5, 200, 500)
 const walletList = [walletOne]
 
 app.use('/', express.static('./src'))
 app.use(express.json())
 app.use(cors())
 
+lcd.updateBalance(walletOne.balance);
 setInterval(() => {
-  flag = checkCard(walletList[0].colour);
-  if (flag) {
-      walletOne.addBalance()
-      console.log(`New balance is: ${walletOne.balance}`)
-      sleep(5000)
-  }
+    if (rfid.scanCard()) { 
+        walletOne.addBalance()
+        console.log(`New balance is: ${walletOne.balance}`)
+
+        // update the LCD with the new balance, play a noise,
+        // set the colour of the LEDs and flash
+        lcd.updateBalance(walletOne.balance);
+        speaker.playSound(walletOne.noise);
+        led.setLEDColour(walletOne.colour);
+        led.flash();
+    }
 }, 500)
 
 // Prints list of all instantiated wallets
@@ -60,12 +72,17 @@ app.post('/settings', (req, res) => {
 })
 
 app.post('/deposit', (req, res) => {
-  flashLED(getLEDColour(walletOne.colour));
-  checkCard(walletOne.colour, true);
-  walletOne.addBalance();
-  console.log(`New balance is: ${walletOne.balance}`);
-  sleep(5000);
-  res.end();
+    walletOne.addSpecificBalance(req.body.deposit);
+    console.log(`New balance is: ${walletOne.balance}`);
+
+    // update the LCD with the new balance, play a noise,
+    // set the colour of the LEDs and flash
+    lcd.updateBalance(walletOne.balance);
+    speaker.playSound(walletOne.noise);
+    led.setLEDColour(walletOne.colour);
+    led.flash();
+
+    res.json({balance: walletOne.balance});
 })
 
 // Listens for http traffic from ${port}
