@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'pig-e-bank'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C134DE77D34C40869FA5FAECCF8EF5F1 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_071330725A374B9093AAAB0CA1742BC2 }}
           package: .
