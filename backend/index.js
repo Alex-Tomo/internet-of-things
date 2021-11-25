@@ -1,7 +1,10 @@
 const Wallet = require('./digital-wallet')
+const userAccount = require('./user-account')
+const Database = require('./dbFunc')
 const express = require('express')
 const cors = require('cors')
 
+/*
 const RFID = require('./rfid');
 let rfid = new RFID();
 
@@ -12,7 +15,7 @@ const SPEAKER = require('./speaker');
 const speaker = new SPEAKER();
 
 const LCD = require('./lcd');
-const lcd = new LCD();
+const lcd = new LCD();*/
 
 // Create and instance of express and capture port number.
 const app = express()
@@ -26,6 +29,7 @@ app.use('/', express.static('./src'))
 app.use(express.json())
 app.use(cors())
 
+/*
 lcd.updateBalance(walletOne.balance);
 setInterval(() => {
     if (rfid.scanCard()) { 
@@ -39,13 +43,70 @@ setInterval(() => {
         led.setLEDColour(walletOne.colour);
         led.flash();
     }
-}, 500)
+}, 500)*/
 
 // Prints list of all instantiated wallets
 app.get('/wallets', (req, res) => {
   res.json({
       walletList
   })
+})
+
+//test to see if get pulls database data
+app.get('/dbWallet', (req, res) => {
+    Database.getAllWallets()
+    .then(userWallet => {
+      res.status(200).json(userWallet)
+    })
+    .catch(error => {
+      res.status(500).json({message: "Unaable to retrieve userWallet"}); 
+    });
+})
+
+//test to see if get pulls database data
+app.get('/dbTransactions', (req, res) => {
+  Database.getAllTransactions()
+  .then(transactionHistory => {
+    res.status(200).json(transactionHistory)
+  })
+  .catch(error => {
+    res.status(500).json({message: "Unaable to retrieve transaction history"}); 
+  });
+})
+
+//test to see if get pulls database data
+app.get('/dbWallet/:id', (req, res) => {
+  const { id } = req.params;
+
+  Database.getWalletById(id)
+  .then(userWallet => {
+    if (userWallet) {
+    res.status(200).json(userWallet)
+    } else {
+      res.status(404).json({message: "wallet not found"});
+    }
+  })
+  .catch(error => {
+    res.status(500).json({message: "Unable to perform operation"}); 
+  });
+})
+
+
+//test to see if get pulls database data
+app.get('/dbTransactions/:userId', (req, res) => {
+  const { userId }  = req.params;
+
+  Database.getTransactionsById(userId)
+  .then(transactionHistory => {
+    if (transactionHistory){
+    res.status(200).json(transactionHistory)
+    } else {
+      res.status(404).json({message: "history not found"});
+    }
+  })
+  .catch(error => {
+    res.status(500).json({message: "Unable to find transaction history for selected user"}); 
+  });
 })
 
 app.post('/settings', (req, res) => {
@@ -71,6 +132,7 @@ app.post('/settings', (req, res) => {
   if (error !== false) res.end('Whoops!, You must have entered the incorrect WalletID')
 })
 
+/*
 app.post('/deposit', (req, res) => {
     walletOne.addSpecificBalance(req.body.deposit);
     console.log(`New balance is: ${walletOne.balance}`);
@@ -83,7 +145,7 @@ app.post('/deposit', (req, res) => {
     led.flash();
 
     res.json({balance: walletOne.balance});
-})
+})*/
 
 // Listens for http traffic from ${port}
 app.listen(port, () => {
