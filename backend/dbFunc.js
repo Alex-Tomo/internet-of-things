@@ -1,83 +1,86 @@
 
-const knex = require('knex');
-const config = require('./knexfile');
-const db = knex(config.development);
+const knex = require('knex')
+const config = require('./knexfile')
+const db = knex(config.development)
 
-function getAllWallets(){
-    return db("userWallet");
+function getAllWallets () {
+  return db('userWallet')
 };
 
-function getWalletById(id){
-    return db("userWallet")
-    .where( 'wallet_id', id )
-    .first();
+function getWalletById (id) {
+  return db('userWallet')
+    .where('wallet_id', id)
+    .first()
 }
 
-function getAllUsers(){
-    return db("userAccount");
+function getAllUsers () {
+  return db('userAccount')
 };
 
-
-function getUserById(userId){
-    return db("userAccount")
+function getUserById (userId) {
+  return db('userAccount')
     .where('user_id', userId)
-    .first();
+    .first()
 };
 
-function getAllTransactions(){
-    return db("transactionHistory");
+function getAllTransactions () {
+  return db('transactionHistory')
 };
 
-function getTransactionsById(userId){
-    return db("transactionHistory")
-    .where("transaction_userId" , userId)
-    .first();
+function getTransactionsById (userId) {
+  return db('transactionHistory')
+    .where('transaction_userId', userId)
+    .first()
 };
 
-//will add this later
-function resetBalance(){
-    db()
+/*
+Added this functionality to add a transaction, this is the correct way to add to the sqlite database
+Ref: https://knexjs.org/#Builder-insert
+*/
+
+async function addTrans (post) {
+  return db('transactionHistory')
+    .insert(post)
+    .then(transaction_walletId => ({ id: transaction_walletId[0] }))
+};
+
+// Adds to the wallets balance, addition performed before db update
+async function addToWallet (value) {
+  return db('userWallet')
+    .where({ wallet_id: 10215645321 })
+    .update({ wallet_balance: value }, ['wallet_id', 'wallet_balance'])
 }
 
-async function addTransactionHistory(id, userId, value){
-    db("transactionHistroy").insert([{transaction_walletId: id}, 
-        {transaction_userId : userId}, 
-        {transaction_value : value}])
-        ;
-    
+// Updates the settings from a user id "kinda not really"
+async function updateSettings (id, depAmount, depLimit, colour, noise) {
+  return db('userAccount')
+    .where({ user_id: id })
+    .update({ user_depositAmmount: depAmount, user_depositLimit: depLimit, user_colour: colour, user_noise: noise })
+}
+
+async function addTransactionHistory (id, userId, value) {
+  db('transactionHistory').insert({ transaction_walletId: id },
+    { transaction_userId: userId },
+    { transaction_value: value })
 };
 
-async function updateUserSettings(userId, userDepositAmount, userDepositLimit, userColour, userNoise, userVolume){
-    db("userAccount")
-        .where({user_id : userId})
-        .update({user_depositAmmount: userDepositAmount}, 
-        {user_depositLimit : userDepositLimit}, 
-        {user_colour : userColour},
-        {user_noise : userNoise},
-        {user_volume : userVolume}
-        );
-    
+async function updateBalance (id, balance) {
+  db('userWallet')
+    .where({ wallet_id: id })
+    .update({ wallet_balance: balance }
+    )
 };
-
-
-async function updateBalance(id, balance){
-    db("userWallet")
-        .where({wallet_id : id})
-        .update({wallet_balance: balance}
-        );
-    
-};
-
 
 module.exports = {
-    getAllWallets,
-    getAllTransactions,
-    getAllUsers,
-    getWalletById,
-    getUserById,
-    getTransactionsById,
-    addTransactionHistory,
-    updateUserSettings,
-    updateBalance
-
+  getAllWallets,
+  getAllTransactions,
+  getAllUsers,
+  getWalletById,
+  getUserById,
+  getTransactionsById,
+  addTransactionHistory,
+  updateBalance,
+  addTrans,
+  addToWallet,
+  updateSettings
 }

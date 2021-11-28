@@ -1,8 +1,8 @@
-const Wallet = require('./digital-wallet')
-const userAccount = require('./user-account')
+// Code will be refactored when everyone signs off on the changes
 const Database = require('./dbFunc')
 const express = require('express')
 const cors = require('cors')
+const ws = require('ws')
 
 /*
 const RFID = require('./rfid');
@@ -15,24 +15,30 @@ const SPEAKER = require('./speaker');
 const speaker = new SPEAKER();
 
 const LCD = require('./lcd');
-const lcd = new LCD();*/
+const lcd = new LCD(); */
 
 // Create and instance of express and capture port number.
 const app = express()
+const wsServer = new ws.Server({ noServer: true })
 const port = 8080
-
-// for testing purposes we will have a wallet creation page at login
-const walletOne = new Wallet('10215645321', 'Person 1', 50, 1, 5, 200, 500)
-const walletList = [walletOne]
 
 app.use('/', express.static('./src'))
 app.use(express.json())
+app.use(express.urlencoded({
+  extended: true
+}))
 app.use(cors())
+
+// Global session variables (don't touch unless you want this house of cards to fall over)
+let setSession = false
+let currUser = ''
+const currTransId = 123
+const accounts = [{ username: 'johnsmith', password: 'password', name: 'John', transId: 123 }, { username: 'stevenclark', password: 'password', name: 'Steven', transId: 125 }, { username: 'amandacrossley', password: 'password', name: 'Amanda', transId: 157 }]
 
 /*
 lcd.updateBalance(walletOne.balance);
 setInterval(() => {
-    if (rfid.scanCard()) { 
+    if (rfid.scanCard()) {
         walletOne.addBalance()
         console.log(`New balance is: ${walletOne.balance}`)
 
@@ -43,93 +49,125 @@ setInterval(() => {
         led.setLEDColour(walletOne.colour);
         led.flash();
     }
-}, 500)*/
+}, 500) */
 
-// Prints list of all instantiated wallets
-app.get('/wallets', (req, res) => {
-  res.json({
-      walletList
-  })
+/*
+This function adds a transaction and attaches it to the currently logged in user, we can also amend this so it sets it to a user in the settings
+but thats up to you guys
+Keeping this function here for people to look over and get back to me
+*/
+async function addDeposit (amount) {
+  const getLatestBalance = await Database.getWalletById(10215645321).then(userWallet => { return userWallet.wallet_balance })
+  await Database.addTrans({ transaction_walletid: 10215645321, transaction_userId: transId, transaction_value: amount })
+  await Database.addToWallet(amount + getLatestBalance)
+}
+
+// Websocket endpoint that sends the balance every 1000ms if the client needs it.
+wsServer.on('connection', async function connection (ws) {
+  setInterval(async function () {
+    balance = await Database.getWalletById(10215645321).then(userWallet => { return userWallet.wallet_balance })
+    ws.send(balance)
+  }, 1000)
 })
 
-//test to see if get pulls database data
-app.get('/dbWallet', (req, res) => {
-    Database.getAllWallets()
-    .then(userWallet => {
-      res.status(200).json(userWallet)
-    })
-    .catch(error => {
-      res.status(500).json({message: "Unaable to retrieve userWallet"}); 
-    });
+// Adds a transaction to the database addDeposit(int: value) is the function.
+app.post('/addTrans', async (req, res, next) => {
+  await addDeposit(parseInt(req.body.depVal))
+  res.send('complete')
 })
 
-//test to see if get pulls database data
-app.get('/dbTransactions', (req, res) => {
-  Database.getAllTransactions()
-  .then(transactionHistory => {
-    res.status(200).json(transactionHistory)
-  })
-  .catch(error => {
-    res.status(500).json({message: "Unaable to retrieve transaction history"}); 
-  });
+// Endpoint for current user session, so that the client can access the session rather than using cookies.
+app.get('/currSession', (req, res) => {
+  res.json({ validSession: setSession, name: currUser, transactionId: currTransId })
 })
 
-//test to see if get pulls database data
-app.get('/dbWallet/:id', (req, res) => {
-  const { id } = req.params;
-
-  Database.getWalletById(id)
-  .then(userWallet => {
-    if (userWallet) {
-    res.status(200).json(userWallet)
-    } else {
-      res.status(404).json({message: "wallet not found"});
-    }
-  })
-  .catch(error => {
-    res.status(500).json({message: "Unable to perform operation"}); 
-  });
+// Clears session for current user.
+app.post('/logout', (req, res, next) => {
+  setSession = false
+  currUser = ''
+  res.redirect('http://pig-e-bank-web.eu.ngrok.io/')
 })
 
-
-//test to see if get pulls database data
-app.get('/dbTransactions/:userId', (req, res) => {
-  const { userId }  = req.params;
-
-  Database.getTransactionsById(userId)
-  .then(transactionHistory => {
-    if (transactionHistory){
-    res.status(200).json(transactionHistory)
-    } else {
-      res.status(404).json({message: "history not found"});
-    }
-  })
-  .catch(error => {
-    res.status(500).json({message: "Unable to find transaction history for selected user"}); 
-  });
-})
-
-app.post('/settings', (req, res) => {
-  // Parses the post request body elements and places into an array "settingData"
-  const settingData = [req.body.walletID, req.body.walletName, req.body.depositAmount, req.body.colour, req.body.sound, req.body.depositLimit]
-  let error = true
-
-  // Loops over walletList (assigned wallets) in order to find the requested wallet and assign the settings profile
-  for (let i = 0; i < walletList.length; ++i) {
-      if (settingData[0] === parseInt(walletList[i].id, 10)) {
-          console.log(`wallet id: ${walletList[i].id} updated.`)
-              // Assigning wallet attributes to the settings recieved by the post request.
-          walletList[i].name = settingData[1]
-          walletList[i].depositAmount = settingData[2]
-          walletList[i].colour = settingData[3]
-          walletList[i].noise = settingData[4]
-          walletList[i].depositLimit = settingData[5]
-          error = false
-          res.end()
+// Logs in user and sets the session to the current user.
+app.post('/login', (req, res, next) => {
+  try {
+    for (let i = 0; i < accounts.length; i++) {
+      if (req.body.username === accounts[i].username && req.body.password === accounts[i].password) {
+        setSession = true
+        currUser = accounts[i].name
+        transId = accounts[i].transId
+        res.redirect('http://pig-e-bank-web.eu.ngrok.io/balance')
       }
+    }
+    res.redirect('http://pig-e-bank-web.eu.ngrok.io/')
+  } catch (error) {
+    console.log('don\'t mind me, just re-writing http headers. Its fine though.')
   }
-  // Error checking to ensure the endpoint produces an output.
-  if (error !== false) res.end('Whoops!, You must have entered the incorrect WalletID')
+})
+
+// Contribution data collated for the savings graph.
+app.get('/contribution', async (req, res) => {
+  const usersFull = []
+  await Database.getAllUsers()
+    .then(userAccount => {
+      for (let i = 0; i < userAccount.length; i++) {
+        usersFull.push({ Id: userAccount[i].user_id, Name: userAccount[i].user_fname + ' ' + userAccount[i].user_sname, saved: 0 })
+      }
+    })
+
+  Database.getAllTransactions()
+    .then(transactionHistory => {
+      for (let i = 0; i < transactionHistory.length; i++) {
+        for (let x = 0; x < usersFull.length; x++) {
+          if (transactionHistory[i].transaction_userId === usersFull[x].Id) {
+            usersFull[x].saved = usersFull[x].saved + transactionHistory[i].transaction_value
+          }
+        }
+      }
+      res.status(200).json(usersFull)
+    })
+})
+
+// Filters last four transactions, applies names to the transactions and orders.
+app.get('/latestTransactions', async (req, res) => {
+  const transListNames = []
+
+  // Waits for this function to complete, iterates over all user accounts and adds only the relevant data to transListNames.
+  await Database.getAllUsers()
+    .then(userAccount => {
+      for (let i = 0; i < userAccount.length; i++) {
+        transListNames.push({ Id: userAccount[i].user_id, Name: userAccount[i].user_fname + ' ' + userAccount[i].user_sname })
+      }
+    })
+
+  // Checks over transaction user id's, matches, then changes the user id to the name of the user as is more manageable.
+  Database.getAllTransactions()
+    .then(transactionHistory => {
+      const transLen = transactionHistory.length
+      const latestTrans = [transactionHistory[transLen - 1], transactionHistory[transLen - 2], transactionHistory[transLen - 3], transactionHistory[transLen - 4]]
+
+      for (let i = 0; i < latestTrans.length; i++) {
+        for (let x = 0; x < transListNames.length; x++) {
+          if (latestTrans[i].transaction_userId === transListNames[x].Id) {
+            latestTrans[i].transaction_userId = transListNames[x].Name
+          }
+        }
+      }
+
+      // If there is transaction history returns four latest transactions, if not throws error.
+      if (transactionHistory) {
+        res.status(200).json(latestTrans)
+      } else {
+        res.send('There seems to have been an error')
+      }
+    })
+})
+
+// Updates Settings from client using form.
+app.post('/updateSett', async (req, res) => {
+  await Database.updateSettings(req.body.id, req.body.depAmount, req.body.depLimit, req.body.colour, req.body.noise)
+  console.log('settings updated')
+  res.end()
 })
 
 /*
@@ -145,9 +183,16 @@ app.post('/deposit', (req, res) => {
     led.flash();
 
     res.json({balance: walletOne.balance});
-})*/
+}) */
 
-// Listens for http traffic from ${port}
-app.listen(port, () => {
+// Listens for http traffic from ${port}.
+const server = app.listen(port, () => {
   console.log(`server started on port: ${port}`)
+})
+
+// Upgrades server on request to change to websocket protocol.
+server.on('upgrade', (request, socket, head) => {
+  wsServer.handleUpgrade(request, socket, head, socket => {
+    wsServer.emit('connection', socket, request)
+  })
 })
