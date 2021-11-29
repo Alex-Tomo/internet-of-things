@@ -42,6 +42,15 @@ class LED {
         }
     }
 
+    errorFlash() {
+        for(let i = 0; i < 8; i ++) {
+            this.turnOn();
+            sleep(100);
+            this.turnOff();
+            sleep(100);
+        }
+    }
+
     setLEDColour = (colour) => {
         switch (colour) {
             case 0: this.led = {'r' : 1, 'g' : 0, 'b' : 0}; break;

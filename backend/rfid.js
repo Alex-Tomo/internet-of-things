@@ -23,8 +23,9 @@ class RFID {
     scanCard() {
         this.rfid.reset();
         let response = this.rfid.findCard();
+        let id = this.rfid.getUid();
         this.rfid.stopCrypto();
-        return response.status;
+        return { status: response.status, id: id.data[2] };
     }
 }
 

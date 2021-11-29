@@ -1,4 +1,5 @@
 const LCDPI = require('raspberrypi-liquid-crystal');
+const { sleep } = require('rpio');
 
 class LCD {
     lcd;
@@ -11,10 +12,34 @@ class LCD {
         this.lcd.printSync(`Loading balance...`);
     }
 
+    initalBalance(balance) {
+        this.lcd.clearSync();
+
+        this.lcd.printLineSync(0, 'Total Balance');
+        this.lcd.printLineSync(1, `$${balance}.00`);
+    }
+
+    updateDepositName(name, depositAmount) {
+        this.lcd.clearSync();
+
+        this.lcd.printLineSync(0, `${name} deposited`);
+        this.lcd.printLineSync(1, `$${depositAmount}!`);
+    }
+
+    updateErrorMessage() {
+        this.lcd.clearSync();
+
+        this.lcd.printLineSync(0, `Error!`);
+        this.lcd.printLineSync(1, `Cannot Read Card`);
+    }
 
     updateBalance(balance) {
+        sleep(1);
+
         this.lcd.clearSync();
-        this.lcd.printSync(`balance = ${balance}`);
+
+        this.lcd.printLineSync(0, 'Total Balance');
+        this.lcd.printLineSync(1, `$${balance}.00`);
     }
 }
 

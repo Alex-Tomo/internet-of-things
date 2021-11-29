@@ -1,7 +1,7 @@
 const { exec } = require("child_process");
 
 class Speaker {
-    playSound(sound = -1, volume = 70) {
+    playSound(sound = -1, volume) {
         switch (sound) {
             case 0: exec(`mplayer -volume ${volume} ./src/noises/pig_snort.mp3`); break;
             case 1: exec(`mplayer -volume ${volume} ./src/noises/pig_wree.mp3`); break;

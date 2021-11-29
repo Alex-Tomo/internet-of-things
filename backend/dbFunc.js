@@ -52,10 +52,10 @@ async function addToWallet (value) {
 }
 
 // Updates the settings from a user id "kinda not really"
-async function updateSettings (id, depAmount, depLimit, colour, noise) {
+async function updateSettings (id, depAmount, depLimit, colour, noise, volume) {
   return db('userAccount')
     .where({ user_id: id })
-    .update({ user_depositAmmount: depAmount, user_depositLimit: depLimit, user_colour: colour, user_noise: noise })
+    .update({ user_depositAmmount: depAmount, user_depositLimit: depLimit, user_colour: colour, user_noise: noise, user_volume: volume })
 }
 
 async function addTransactionHistory (id, userId, value) {
