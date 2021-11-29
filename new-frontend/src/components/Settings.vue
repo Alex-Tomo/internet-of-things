@@ -27,17 +27,22 @@
     <label class="text-transaction-grey font-bold md:text-right mb-1 md:mb-0 pr-4" for="sounds">Sounds</label>
     <br>
     <div class="inline-block relative w-64">
-      <select name="sounds" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-        <option v-on:click="noise = 0">Oink</option>
-        <option v-on:click="noise = 1">Squeel</option>
-        <option v-on:click="noise = 2">Fart 1</option>
-        <option v-on:click="noise = 3">Fart 2</option>
-        <option v-on:click="noise = 4">Coin Drop 1</option>
-        <option v-on:click="noise = 5">Coin Drop 2</option>
-        <option v-on:click="noise = 6">Laugh 1</option>
-        <option v-on:click="noise = 7">Laugh 2</option>
+      <select v-model="noise" name="sounds" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+        <option v-bind:value="0">Oink</option>
+        <option v-bind:value="1">Squeel</option>
+        <option v-bind:value="2">Fart 1</option>
+        <option v-bind:value="3">Fart 2</option>
+        <option v-bind:value="4">Coin Drop 1</option>
+        <option v-bind:value="5">Coin Drop 2</option>
+        <option v-bind:value="6">Laugh 1</option>
+        <option v-bind:value="7">Laugh 2</option>
+        <option v-bind:value="8">Mute</option>
       </select>
     </div>
+    <br>
+    <br>
+    <label class="text-transaction-grey font-bold md:text-right mb-1 md:mb-0 pr-4" for="volume">Volume:</label>
+    <input name="volume" type="range" min="0" max="100" v-model="volume">
     <br>
     <br>
     <label class="text-transaction-grey font-bold md:text-right mb-1 md:mb-0 pr-4" for="dep-limit">Deposit Limit</label>
@@ -59,6 +64,7 @@ export default {
       colour: 0,
       depositAmount: 0,
       noise: 0,
+      volume: 0,
       depositLimit: 0,
       colourButtonState: 0
     }
@@ -70,10 +76,11 @@ export default {
         depAmount: this.depositAmount,
         depLimit: this.depositLimit,
         colour: this.colour,
-        noise: this.noise
+        noise: parseInt(this.noise),
+        volume: parseInt(this.volume)
       }
-      await axios.get('pig-e-bank-api.eu.ngrok.io/currSession').then(resp => dataSend.id = resp.data.transactionId)
-      await axios.post('pig-e-bank-api.eu.ngrok.io/updateSett', dataSend)
+      await axios.get('https://pig-e-bank-api.eu.ngrok.io/currSession').then(resp => dataSend.id = resp.data.transactionId)
+      await axios.post('https://pig-e-bank-api.eu.ngrok.io/updateSett', dataSend)
     }
   }
 }

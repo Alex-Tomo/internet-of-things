@@ -45,11 +45,11 @@ export default {
       }
     },
     logoutClick () {
-      axios.post('http://pig-e-bank-api.eu.ngrok.io/logout')
+      axios.post('https://pig-e-bank-api.eu.ngrok.io/logout')
     }
   },
   mounted () {
-    axios.get('http://pig-e-bank-api.eu.ngrok.io/currSession').then(resp => { this.validSession = resp.data.validSession })
+    axios.get('https://pig-e-bank-api.eu.ngrok.io/currSession').then(resp => { this.validSession = resp.data.validSession })
   }
 }
 </script>

@@ -67,15 +67,15 @@ export default {
   methods: {
     depositAmount () {
       let depnow = { depVal: this.depositAdd }
-      axios.post('http://pig-e-bank-api.eu.ngrok.io/addTrans', depnow)
+      axios.post('https://pig-e-bank-api.eu.ngrok.io/addTrans', depnow)
     }
   },
   async mounted () {
-    axios.get('http://pig-e-bank-api.eu.ngrok.io/currSession').then(resp => { this.username = resp.data.name })
+    axios.get('https://pig-e-bank-api.eu.ngrok.io/currSession').then(resp => { this.username = resp.data.name })
     for (let i = 0; i < 4; i++) {
-      await axios.get('http://pig-e-bank-api.eu.ngrok.io/latestTransactions').then(resp => { this.namesPass.push(resp.data[i].transaction_userId) })
-      await axios.get('http://pig-e-bank-api.eu.ngrok.io/latestTransactions').then(resp => { this.datePass.push(resp.data[i].transaction_date) })
-      await axios.get('http://pig-e-bank-api.eu.ngrok.io/latestTransactions').then(resp => { this.depositPass.push(resp.data[i].transaction_value) })
+      await axios.get('https://pig-e-bank-api.eu.ngrok.io/latestTransactions').then(resp => { this.namesPass.push(resp.data[i].transaction_userId) })
+      await axios.get('https://pig-e-bank-api.eu.ngrok.io/latestTransactions').then(resp => { this.datePass.push(resp.data[i].transaction_date) })
+      await axios.get('https://pig-e-bank-api.eu.ngrok.io/latestTransactions').then(resp => { this.depositPass.push(resp.data[i].transaction_value) })
     }
   }
 }

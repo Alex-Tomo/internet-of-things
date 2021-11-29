@@ -16,9 +16,9 @@ export default {
    async mounted(){
        var amountofUsers = 0
        var graphName = []
-      await axios.get("pig-e-bank-api.eu.ngrok.io/contribution").then(resp => {amountofUsers = resp.data.length});
+      await axios.get("https://pig-e-bank-api.eu.ngrok.io/contribution").then(resp => {amountofUsers = resp.data.length});
          for(var x = 0; x < amountofUsers; x++){
-     await axios.get("http://pig-e-bank-api.eu.ngrok.io/contribution").then(resp => {graphName.push([resp.data[x].Name, resp.data[x].saved])});
+     await axios.get("https://pig-e-bank-api.eu.ngrok.io/contribution").then(resp => {graphName.push([resp.data[x].Name, resp.data[x].saved])});
   }
   this.graphName = graphName
 }

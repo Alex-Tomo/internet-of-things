@@ -14,7 +14,7 @@ export default {
     }
   },
   mounted () {
-    const connection = new WebSocket('ws://pig-e-bank-api.eu.ngrok.io/')
+    const connection = new WebSocket('wss://pig-e-bank-api.eu.ngrok.io/')
     connection.onmessage = (event) => {
       if (this.balanceSock != event.data) {
         const element = document.getElementById('balance')
