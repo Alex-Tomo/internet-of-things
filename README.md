@@ -7,8 +7,11 @@ The project was undertaken over a semester and served as a way to gain experienc
 usernames and passwords
 
 christina     password
+
 kay           password
+
 majid         password
+
 
 ## Tech Stack
 
