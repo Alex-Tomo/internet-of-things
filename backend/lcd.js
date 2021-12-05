@@ -22,8 +22,8 @@ class LCD {
     updateDepositName(name, depositAmount) {
         this.lcd.clearSync();
 
-        this.lcd.printLineSync(0, `${name} deposited`);
-        this.lcd.printLineSync(1, `$${depositAmount}!`);
+        this.lcd.printLineSync(0, `${name}`);
+        this.lcd.printLineSync(1, `deposited $${depositAmount}!`);
     }
 
     updateErrorMessage() {

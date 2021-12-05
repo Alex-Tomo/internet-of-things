@@ -14,7 +14,7 @@ const SPEAKER = require('./speaker');
 const speaker = new SPEAKER();
 
 const LCD = require('./lcd');
-const { sleep } = require('rpio');
+const { sleep } = require('./sleep');
 const lcd = new LCD(); 
 
 // Create and instance of express and capture port number.
@@ -32,8 +32,12 @@ app.use(cors())
 // Global session variables (don't touch unless you want this house of cards to fall over)
 let setSession = false
 let currUser = ''
-const currTransId = 123
-const accounts = [{ username: 'johnsmith', password: 'password', name: 'John', transId: 123 }, { username: 'stevenclark', password: 'password', name: 'Steven', transId: 125 }, { username: 'amandacrossley', password: 'password', name: 'Amanda', transId: 157 }]
+let currTransId = 123
+const accounts = [
+  { username: 'christina', password: 'password', name: 'Christina', transId: 123 },
+  { username: 'kay', password: 'password', name: 'Kay', transId: 125 },
+  { username: 'majid', password: 'password', name: 'Majid', transId: 157 }
+]
 
 let balance = 0;
 
@@ -65,11 +69,13 @@ setInterval(async () => {
                         .then(userWallet => {
                             balance = userWallet.wallet_balance
                     })
+                }).then(() => {
+                    sleep(3000);
                 })
         } catch(error) {
             lcd.updateErrorMessage();
 
-            speaker.playSound(0, 75);
+            speaker.playSound(-1, 100);
             led.setLEDColour(5);
             led.errorFlash();
 
@@ -85,7 +91,7 @@ Keeping this function here for people to look over and get back to me
 */
 async function addDeposit (amount) {
   const getLatestBalance = await Database.getWalletById(10215645321).then(userWallet => { return userWallet.wallet_balance })
-  await Database.addTrans({ transaction_walletid: 10215645321, transaction_userId: transId, transaction_value: amount })
+  await Database.addTrans({ transaction_walletid: 10215645321, transaction_userId: currTransId, transaction_value: amount })
   await Database.addToWallet(amount + getLatestBalance)
 }
 
@@ -104,10 +110,10 @@ wsServer.on('connection', async function connection (ws) {
 })
 
 // Adds a transaction to the database addDeposit(int: value) is the function.
-app.post('/addTrans', async (req, res, next) => {
+app.post('/addTrans', async (req, res) => {
     await addDeposit(parseInt(req.body.depVal))
 
-    await Database.getUserById(transId)
+    await Database.getUserById(currTransId)
         .then(user => { 
             lcd.updateDepositName(user.user_fname, req.body.depVal);
             console.log(`New balance is: ${balance + req.body.depVal}`);
@@ -148,7 +154,7 @@ app.post('/login', (req, res, next) => {
       if (req.body.username === accounts[i].username && req.body.password === accounts[i].password) {
         setSession = true
         currUser = accounts[i].name
-        transId = accounts[i].transId
+        currTransId = accounts[i].transId
         res.redirect('https://pig-e-bank-web.eu.ngrok.io/balance')
       }
     }
@@ -219,7 +225,7 @@ app.get('/latestTransactions', async (req, res) => {
 // Updates Settings from client using form.
 app.post('/updateSett', async (req, res) => {
     console.log(req.body);
-  await Database.updateSettings(req.body.id, req.body.depAmount, req.body.depLimit, req.body.colour, req.body.noise, req.body.volume)
+  await Database.updateSettings(currTransId, req.body.depAmount, req.body.depLimit, req.body.colour, req.body.noise, req.body.volume)
   console.log('settings updated')
   res.end()
 })
